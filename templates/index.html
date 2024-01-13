@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>myCTF</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+  </head>
+  <body>
+    <div class="terminal">
+      <div class="line">
+        <div class="prompt">$</div>
+        <form action="/simulate" method="post">
+          <input
+            type="text"
+            id="command"
+            name="command"
+            class="command-input"
+            autofocus
+          />
+        </form>
+      </div>
+      {% if result %}
+      <div class="line result">
+        <pre>{{ result }}</pre>
+      </div>
+      {% endif %} {% if command %}
+      <div class="line result">
+        <div class="prompt">$ {{ command }}</div>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- "정답 입력" 버튼 추가 -->
+    <div class="button-container">
+      <button onclick="openModel()">정답 입력</button>
+    </div>
+
+    <!-- 평소 숨겨지는 모달 창-->
+    <div id="myModel" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModel()">&times;</span>
+        <p>MAC주소 입력:</p>
+        <input
+          type="text"
+          id="macAddress"
+          placeholder="MAC주소를 입력하세요. (ex. aa:bb:cc:dd:ee:ff)"
+        />
+        <div class="button-container">
+          <button onclick="checkMAcAddress()">확인</button>
+        </div>
+      </div>
+    </div>
+    <script>
+      function openModel() {
+        document.getElementById("myModel").style.display = "block";
+      }
+
+      function closeModel() {
+        document.getElementById("myModel").style.display = "none";
+      }
+
+      function checkMAcAddress() {
+        // 입력값을 받아 백엔드로 보내 결과를 받아오기.
+        var submittedMacAddress = document.getElementById("macAddress").value;
+
+        // 백엔드에 보내서 결과를 받아오기
+        fetch("/answer", {
+          method: "POST",
+          // 폼 데이터 형태로 보내기 (k-v)
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: "macAddress=" + encodeURIComponent(submittedMacAddress),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            alert(data.result);
+          });
+
+        // 서버에서 route하기
+      }
+    </script>
+  </body>
+</html>
