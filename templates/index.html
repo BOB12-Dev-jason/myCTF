@@ -43,14 +43,14 @@
     <div id="myModel" class="modal">
       <div class="modal-content">
         <span class="close" onclick="closeModel()">&times;</span>
-        <p>MAC주소 입력:</p>
+        <p>IP주소 입력:</p>
         <input
           type="text"
-          id="macAddress"
-          placeholder="MAC주소를 입력하세요. (ex. aa:bb:cc:dd:ee:ff)"
+          id="ipAddress"
+          placeholder="IP주소를 입력하세요. (ex. 192.168.1.10)"
         />
         <div class="button-container">
-          <button onclick="checkMAcAddress()">확인</button>
+          <button onclick="checkIpAddress()">확인</button>
         </div>
       </div>
     </div>
@@ -63,9 +63,9 @@
         document.getElementById("myModel").style.display = "none";
       }
 
-      function checkMAcAddress() {
+      function checkIpAddress() {
         // 입력값을 받아 백엔드로 보내 결과를 받아오기.
-        var submittedMacAddress = document.getElementById("macAddress").value;
+        var submittedIpAddress = document.getElementById("ipAddress").value;
 
         // 백엔드에 보내서 결과를 받아오기
         fetch("/answer", {
@@ -74,7 +74,7 @@
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
           },
-          body: "macAddress=" + encodeURIComponent(submittedMacAddress),
+          body: "ipAddress=" + encodeURIComponent(submittedIpAddress),
         })
           .then((response) => response.json())
           .then((data) => {
